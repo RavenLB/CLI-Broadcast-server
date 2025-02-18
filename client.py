@@ -1,6 +1,29 @@
 import socket
 import threading
 
+def register_username(client_socket):
+    """
+    Handle username registration with the server
+    """
+    while True:
+        try:
+            username = input("Enter your username: ")
+            if username and username.strip():
+                # Send username to server for validation
+                client_socket.send(f"USERNAME:{username}".encode())
+                response = client_socket.recv(1024).decode()
+                
+                if response == "USERNAME_TAKEN":
+                    print("Username already taken. Please choose another one.")
+                elif response == "USERNAME_ACCEPTED":
+                    print(f"Welcome, {username}!")
+                    return username
+            else:
+                print("Username cannot be empty. Please try again.")
+        except Exception as e:
+            print(f"Error during registration: {e}")
+            return None
+
 def receive_messages(client_socket):
     """
     Listen for messages from the server and display them.
@@ -11,7 +34,7 @@ def receive_messages(client_socket):
             if message:
                 # Clear current line and move to beginning
                 print('\033[2K\r', end='')  # Clear the current line
-                print(f"Them: {message}")  # Print the received message
+                print(f"{message}")  # Print the received message
                 # Print the prompt on a new line
                 print("You: ", end='', flush=True)
             else:
@@ -24,7 +47,7 @@ def receive_messages(client_socket):
             print(f"\nError receiving message: {e}")
             break
 
-def send_messages(client_socket):
+def send_messages(client_socket, username):
     while True:
         try:
             message = input("You: ")
@@ -49,6 +72,14 @@ def start_client():
     try:
         client_socket.connect((host, port))
         print("Connected to the server!")
+        
+        # Register username
+        username = register_username(client_socket)
+        if not username:
+            print("Registration failed. Disconnecting...")
+            client_socket.close()
+            return
+
         print("Type 'exit' to disconnect")
 
         # Start a thread to listen for messages from the server
@@ -56,7 +87,7 @@ def start_client():
         receive_thread.start()
 
         # Main loop for sending messages to the server
-        send_messages(client_socket)
+        send_messages(client_socket, username)
 
     except ConnectionRefusedError:
         print("Could not connect to the server. Make sure the server is running.")
