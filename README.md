@@ -1,23 +1,40 @@
 # Simple Chat Application
 
-A simple terminal-based chat application built with Python using sockets and threading for real-time communication between multiple clients through a central server.
+A simple terminal-based chat application built with Python using sockets, threading, and SQLAlchemy for real-time communication between multiple clients through a central server.
 
-## V1 Features
+## Features
 
+### V1 Features
 - Basic terminal-based chat interface
 - Multiple client connections
 - Real-time message broadcasting
-- Clean message formatting (You/Them prefixes)
-- Graceful connection handling and error recovery
+- Clean message formatting
+- Graceful connection handling
 - Simple command system ('exit')
 - Server-side connection management
 - Automatic client cleanup on disconnect
 
+### V2 Features
+- User authentication system
+  - Username/password registration
+  - Secure password storage with hashing
+  - Login session management
+- Database integration (SQLAlchemy)
+  - User account persistence
+  - Active connection tracking
+  - Session management
+- Security improvements
+  - Password hashing
+  - Secure password input
+  - Session validation
+
 ## Requirements
 
 - Python 3.6 or higher
+- SQLAlchemy
+- SQLite3 (included with Python)
 
-## Getting Started
+## Installation
 
 1. Clone the repository:
 
@@ -26,48 +43,47 @@ git clone https://github.com/RavenLB/CLI-Broadcast-server.git
 cd simple-chat-app
 ```
 
-2. Start the server:
+2. Install dependencies:
 
 ```bash
-python server.py start
+pip install sqlalchemy
+```
+
+3. Initialize the database:
+
+```bash
+python init_db.py
 ```
 
 ## Usage
 
-1. Connect to the server:
+1. Start the server:
+
+```bash
+python server.py
+```
+
+2. Connect clients:
 
 ```bash
 python client.py
 ```
 
-2. Send messages:
+3. Register or login:
+   - Choose option 1 to login with existing account
+   - Choose option 2 to register new account
+   - Enter username and password when prompted
 
-```bash
-Type your message and press Enter to send.
-Type 'exit' to disconnect.
-```
+4. Chat commands:
+   - Type messages and press Enter to send
+   - Type 'exit' to disconnect
 
-3. Disconnect:
+## Security Features
 
-```bash
-Type 'exit' to disconnect.
-```
-
-## Example Interaction
-
-```bash
-Server Terminal:
-Server Started.
-New connection: ('127.0.0.1', 52431)
-Message from ('127.0.0.1', 52431): Hello everyone!
-
-Client Terminal:
-Connected to the server!
-Type 'exit' to disconnect
-You: Hello everyone!
-Them: Hi there!
-You:
-```
+- Passwords are hashed using SHA-256
+- Secure password input (hidden characters)
+- Session tracking prevents duplicate logins
+- Automatic session cleanup on disconnect
 
 ## Error Handling
 
@@ -76,39 +92,44 @@ The application handles various scenarios:
 - Client disconnection
 - Network errors
 - Invalid messages
-- Unexpected client termination
+- Authentication failures
+- Database errors
+- Session conflicts
+- Unexpected termination
 
 ## Future Improvements
 
 1. User Features:
-   - Username registration
    - Private messaging
    - Message history
    - File sharing
-   - Emojis and rich text support
    - Online user list
+   - User profiles
 
 2. Security:
    - End-to-end encryption
-   - User authentication
-   - Message validation
+   - Password strength requirements
    - Rate limiting
+   - IP blocking
 
 3. Technical Enhancements:
    - GUI interface
-   - Message persistence (database)
-   - Server configuration file
+   - Message persistence
    - Multiple chat rooms
    - Message timestamps
-   - Server status monitoring
-   - Client reconnection handling
+   - Message formatting
 
 4. Administrative Features:
    - User moderation tools
    - Chat room management
    - Message filtering
    - User banning/muting
+   - Activity logging
 
 ## Contributing
 
-Feel free to submit issues and enhancement requests
+Feel free to submit issues and enhancement requests!
+
+## License
+
+[MIT License](LICENSE)
